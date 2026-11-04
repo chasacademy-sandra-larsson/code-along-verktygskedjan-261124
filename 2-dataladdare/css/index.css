@@ -1,0 +1,59 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 62.5%;
+}
+
+body {
+  font-family: system-ui, sans-serif;
+  font-size: 1.8rem;
+  line-height: 1.5;
+  color: #2b2f2f;
+}
+
+main {
+  max-width: 64rem;
+  margin: 6rem auto;
+  padding: 0 2rem;
+}
+
+h1 {
+  font-size: 3.2rem;
+  margin-bottom: 1.6rem;
+}
+
+form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+input,
+button {
+  font: inherit;
+  padding: 0.4rem 1rem;
+}
+
+#results {
+  list-style: none;
+  display: grid;
+  gap: 1.2rem;
+}
+
+#results li {
+  display: flex;
+  gap: 1.2rem;
+  align-items: center;
+}
+
+#results img {
+  width: 6rem;
+  height: 8.4rem;
+  object-fit: cover;
+}
