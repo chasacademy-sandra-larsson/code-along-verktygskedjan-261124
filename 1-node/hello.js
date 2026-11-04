@@ -13,6 +13,6 @@ console.log('Hej från Node!');
 // TODO: logga process.version och process.platform. Vad är process?
 
 // 4. fetch finns i båda
-// TODO: hämta https://api.tvmaze.com/search/shows?q=star med fetch och await
-//       och logga namnet på första serien. Fungerar await direkt i en modul?
+// TODO: hämta vädret i Stockholm från Open-Meteo med fetch och await och logga temperaturen:
+//       https://api.open-meteo.com/v1/forecast?latitude=59.33&longitude=18.07&current=temperature_2m Fungerar await direkt i en modul?
 //       Tips: döp om filen till hello.mjs, eller läs vidare om "type": "module" i del 3.

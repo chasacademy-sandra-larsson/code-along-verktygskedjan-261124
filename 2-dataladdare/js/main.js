@@ -1,40 +1,76 @@
-// Del 2: Dataladdaren, utan verktyg
-import { searchShows } from './api.js';
-import { renderShow } from './render.js';
+// main.js: hämtar elementen, kopplar ihop api.js och render.js, och håller reda på läget.
+import { searchCities, getWeather } from './api.js';
+import { setStatus, renderCities, renderWeather, renderFavorite, renderFavoriteError } from './render.js';
 
 const form = document.querySelector('#search-form');
-const status = document.querySelector('#status');
-const results = document.querySelector('#results');
+const input = document.querySelector('#search');
+const searchStatus = document.querySelector('#search-status');
+const cityList = document.querySelector('#cities');
+const weatherSection = document.querySelector('#weather-section');
+const weatherStatus = document.querySelector('#weather-status');
+const weatherContainer = document.querySelector('#weather');
+const favoriteList = document.querySelector('#favorites');
 
-async function load(query) {
-  status.textContent = 'Laddar …';
-  results.replaceChildren();
-  try {
-    const shows = await searchShows(query);
-    status.textContent = shows.length ? `${shows.length} serier` : 'Inga träffar';
-    results.append(...shows.map(renderShow));
-  } catch (error) {
-    status.textContent = error.message;
-  }
-}
+const FAVORITES = [
+  { name: 'Stockholm', latitude: 59.33, longitude: 18.07 },
+  { name: 'Göteborg', latitude: 57.71, longitude: 11.97 },
+  { name: 'Malmö', latitude: 55.61, longitude: 13.0 },
+];
 
-form.addEventListener('submit', (event) => {
+// Steg 6: en ny sökning avbryter den förra
+let searchController = null;
+
+// Steg 3: sök
+form.addEventListener('submit', async (event) => {
   event.preventDefault();
-  load(form.query.value);
+  const name = input.value.trim();
+  if (!name) return;
+
+  searchController?.abort();
+  searchController = new AbortController();
+
+  setStatus(searchStatus, 'Söker...');
+  cityList.replaceChildren();
+  try {
+    const cities = await searchCities(name, searchController.signal);
+    if (cities.length === 0) {
+      setStatus(searchStatus, `Hittade ingen ort som heter ${name}.`);
+      return;
+    }
+    setStatus(searchStatus, `${cities.length} träffar. Välj en ort.`);
+    renderCities(cityList, cities, showWeather);
+  } catch (error) {
+    if (error.name === 'AbortError') return; // en nyare sökning har tagit över
+    setStatus(searchStatus, 'Något gick fel, försök igen.', true);
+  }
 });
 
-load(form.query.value);
+// Steg 4: visa vädret för en ort, med timeout (steg 6)
+const showWeather = async (city) => {
+  weatherSection.hidden = false;
+  weatherContainer.replaceChildren();
+  setStatus(weatherStatus, `Hämtar vädret för ${city.name}...`);
+  try {
+    const weather = await getWeather(city.latitude, city.longitude, AbortSignal.timeout(5000));
+    setStatus(weatherStatus, '');
+    renderWeather(weatherContainer, city, weather);
+  } catch (error) {
+    const message =
+      error.name === 'TimeoutError' ? 'Vädertjänsten svarar inte just nu.' : 'Vädret kunde inte hämtas.';
+    setStatus(weatherStatus, message, true);
+  }
+};
 
-// 1. Appen fungerar med Live Server. Kolla att du ser sökresultatet.
-
-// 2. Premiärdatumet visas som 2013-03-12. Vi vill ha "12 mars 2013".
-//    Det finns ett bibliotek för det: date-fns.
-// TODO: öppna terminalen i 2-dataladdare och kör:
-//         npm init -y
-//         npm install date-fns
-//       Titta i package.json och i mappen node_modules. Vad har hänt?
-
-// 3. TODO: lägg till överst i render.js:
-//         import { format } from 'date-fns';
-//       Ladda om sidan. Vilket fel får du i konsolen, och varför?
-//       Webbläsaren vet inte var 'date-fns' finns. Det är det problemet en bundler som Vite löser.
+// Steg 5: favoriterna hämtas samtidigt. allSettled gör att en ort som inte svarar
+// inte tar med sig de andra.
+const loadFavorites = async () => {
+  const results = await Promise.allSettled(
+    FAVORITES.map((city) => getWeather(city.latitude, city.longitude, AbortSignal.timeout(5000))),
+  );
+  favoriteList.replaceChildren(
+    ...results.map((result, i) =>
+      result.status === 'fulfilled' ? renderFavorite(FAVORITES[i], result.value) : renderFavoriteError(FAVORITES[i]),
+    ),
+  );
+};
+loadFavorites();
