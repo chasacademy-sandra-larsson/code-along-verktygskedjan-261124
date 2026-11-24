@@ -1,0 +1,127 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 62.5%;
+}
+
+body {
+  font-family: system-ui, sans-serif;
+  font-size: 1.8rem;
+  line-height: 1.5;
+  color: #2b2f2f;
+  background: #f6f8f8;
+}
+
+main {
+  max-width: 72rem;
+  margin: 4rem auto;
+  padding: 0 2rem;
+}
+
+h1 {
+  font-size: 3.6rem;
+  margin-bottom: 2.4rem;
+}
+
+h2 {
+  font-size: 2.2rem;
+  margin: 3.2rem 0 1.2rem;
+}
+
+section {
+  margin-bottom: 2.4rem;
+}
+
+form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  align-items: center;
+}
+
+label {
+  font-weight: 700;
+}
+
+input,
+button {
+  font: inherit;
+  padding: 0.6rem 1.2rem;
+  border: 2px solid #2b2f2f;
+  border-radius: 0.6rem;
+}
+
+button {
+  background: #2b2f2f;
+  color: #fff;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #4c64ff;
+  border-color: #4c64ff;
+}
+
+:focus-visible {
+  outline: 3px solid #4c64ff;
+  outline-offset: 2px;
+}
+
+.status {
+  margin: 1.2rem 0;
+  min-height: 2.7rem;
+}
+
+.status.error {
+  color: #b00020;
+  font-weight: 700;
+}
+
+.cities {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
+.cities button {
+  background: #fff;
+  color: #2b2f2f;
+}
+
+.cities button:hover {
+  background: #4c64ff;
+  border-color: #4c64ff;
+  color: #fff;
+}
+
+.favorites {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+  gap: 1.2rem;
+}
+
+.card {
+  background: #fff;
+  border-radius: 1rem;
+  padding: 1.6rem;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.12);
+}
+
+.card .temp {
+  font-size: 3.2rem;
+  font-weight: 700;
+}
+
+.days {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.2rem;
+  margin-top: 1.2rem;
+}

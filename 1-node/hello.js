@@ -7,12 +7,19 @@ console.log('Hej från Node!');
 
 // 2. Node har inte webbläsarens API:er
 // TODO: avkommentera raden nedan och kör igen. Vilket fel får du, och varför?
-// console.log(document.title);
+ //console.log(document.title);
 
 // 3. Men Node har saker som webbläsaren inte har
 // TODO: logga process.version och process.platform. Vad är process?
+//console.log(process.version);
+//console.log(process.platform);
 
 // 4. fetch finns i båda
 // TODO: hämta vädret i Stockholm från Open-Meteo med fetch och await och logga temperaturen:
 //       https://api.open-meteo.com/v1/forecast?latitude=59.33&longitude=18.07&current=temperature_2m Fungerar await direkt i en modul?
 //       Tips: döp om filen till hello.mjs, eller läs vidare om "type": "module" i del 3.
+
+
+const response = await fetch("https://api.open-meteo.com/v1/forecast?latitude=59.33&longitude=18.07&current=temperature_2m");
+const data = await response.json()
+console.log("Weather data", data);
